@@ -111,7 +111,7 @@ ORD-1005,CUST-505,Electronics,1250.00,1,2026-07-01 15:45:00`;
                 <span className="text-[10px] text-slate-500 font-mono mt-1">Chunked up to 50MB</span>
                 <input
                   type="file"
-                  accept=".csv"
+                  accept=".csv, .txt, .xlsx, .xls, */*"
                   className="hidden"
                   onChange={handleFileUpload}
                   disabled={loading}
