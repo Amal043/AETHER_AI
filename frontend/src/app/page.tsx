@@ -12,7 +12,6 @@ import { WhyUsCommandSection } from "@/components/landing/why-us-command";
 import { TechStackHudSection } from "@/components/landing/tech-stack-hud";
 import { WorkflowCommandSection } from "@/components/landing/workflow-command";
 import { PreviewCommandSection } from "@/components/landing/preview-command";
-import { TestimonialsHudSection } from "@/components/landing/testimonials-hud";
 import { CTACommandSection } from "@/components/landing/cta-command";
 
 export default function Home() {
@@ -33,7 +32,6 @@ export default function Home() {
         <TechStackHudSection />
         <WorkflowCommandSection />
         <PreviewCommandSection />
-        <TestimonialsHudSection />
         <CTACommandSection />
       </main>
 
