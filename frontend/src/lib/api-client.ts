@@ -107,6 +107,16 @@ export async function fetchEtlLogs() {
   return data || { status: "empty", data: [] };
 }
 
+export async function fetchAnomalies() {
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/ml/anomalies`);
+  return data || { status: "empty", data: [] };
+}
+
+export async function fetchForecast() {
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/ml/forecast`);
+  return data || { status: "empty", data: null };
+}
+
 export async function uploadCsvFile(file: File) {
   const formData = new FormData();
   formData.append("file", file);
