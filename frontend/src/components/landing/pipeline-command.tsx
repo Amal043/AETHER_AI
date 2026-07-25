@@ -30,7 +30,7 @@ ORD-1005,CUST-505,Electronics,1250.00,1,2026-07-01 15:45:00`;
 
       const file = new File([demoCsvContent], "demo_stream.csv", { type: "text/csv" });
       const res = await uploadAndIngestCSV(file);
-      setReport(res.data);
+      setReport(res.data || res);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Pipeline execution failed. Ensure backend API is active.";
       setError(message);
@@ -46,7 +46,7 @@ ORD-1005,CUST-505,Electronics,1250.00,1,2026-07-01 15:45:00`;
     setError(null);
     try {
       const res = await uploadAndIngestCSV(file);
-      setReport(res.data);
+      setReport(res.data || res);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Failed to parse CSV dataset.";
       setError(message);

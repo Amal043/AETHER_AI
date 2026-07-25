@@ -39,7 +39,7 @@ export default function IngestionPage() {
     setReport(null);
     try {
       const res = await uploadCsvFile(targetFile);
-      setReport(res.data);
+      setReport(res.data || res);
       loadLogs();
     } catch (err: any) {
       alert("Upload failed: " + err.message);
