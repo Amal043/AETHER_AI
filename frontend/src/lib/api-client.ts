@@ -1,4 +1,8 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8005";
+export const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  (typeof window !== "undefined" && window.location.hostname.includes("localhost")
+    ? "http://127.0.0.1:8005"
+    : "https://aether-ai-9vsw.onrender.com");
 
 export interface GlobalFilters {
   category?: string;
@@ -14,30 +18,19 @@ export interface HealthCheckResponse {
   environment: string;
 }
 
-export interface IngestionReportResponse {
-  status: string;
-  filename: string;
-  execution_time_seconds: number;
-  quality_score: number;
-  summary: {
-    total_rows: number;
-    imported_rows: number;
-    rejected_rows: number;
-    overall_completeness_pct: number;
-    duplicate_rows_count: number;
-  };
-  columns: any[];
-  log: string;
+export async function safeFetch(url: string, options?: RequestInit) {
+  try {
+    const res = await fetch(url, { cache: "no-store", ...options });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn(`Fetch error for ${url}:`, err);
+    return null;
+  }
 }
 
 export async function fetchBackendHealth(): Promise<HealthCheckResponse | null> {
-  try {
-    const res = await fetch(`${API_BASE_URL}/health`);
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
-    return null;
-  }
+  return await safeFetch(`${API_BASE_URL}/health`);
 }
 
 export async function fetchKpis(filters: GlobalFilters = {}) {
@@ -47,45 +40,38 @@ export async function fetchKpis(filters: GlobalFilters = {}) {
   if (filters.warehouse_id) params.append("warehouse_id", filters.warehouse_id.toString());
   if (filters.device) params.append("device", filters.device);
 
-  const res = await fetch(`${API_BASE_URL}/api/v1/analytics/kpis?${params.toString()}`);
-  if (!res.ok) throw new Error("Failed to fetch KPIs");
-  return res.json();
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/analytics/kpis?${params.toString()}`);
+  return data || { status: "empty", data: null };
 }
 
 export async function fetchRevenueTrends() {
-  const res = await fetch(`${API_BASE_URL}/api/v1/analytics/revenue`);
-  if (!res.ok) throw new Error("Failed to fetch revenue trends");
-  return res.json();
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/analytics/revenue`);
+  return data || { status: "empty", data: [] };
 }
 
 export async function fetchSalesAnalytics() {
-  const res = await fetch(`${API_BASE_URL}/api/v1/analytics/sales`);
-  if (!res.ok) throw new Error("Failed to fetch sales analytics");
-  return res.json();
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/analytics/sales`);
+  return data || { status: "empty", data: null };
 }
 
 export async function fetchCustomerAnalytics() {
-  const res = await fetch(`${API_BASE_URL}/api/v1/analytics/customers`);
-  if (!res.ok) throw new Error("Failed to fetch customer analytics");
-  return res.json();
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/analytics/customers`);
+  return data || { status: "empty", data: null };
 }
 
 export async function fetchInventoryAnalytics() {
-  const res = await fetch(`${API_BASE_URL}/api/v1/analytics/inventory`);
-  if (!res.ok) throw new Error("Failed to fetch inventory analytics");
-  return res.json();
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/analytics/inventory`);
+  return data || { status: "empty", data: null };
 }
 
 export async function fetchLogisticsAnalytics() {
-  const res = await fetch(`${API_BASE_URL}/api/v1/analytics/logistics`);
-  if (!res.ok) throw new Error("Failed to fetch logistics analytics");
-  return res.json();
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/analytics/logistics`);
+  return data || { status: "empty", data: null };
 }
 
 export async function fetchEdaReport() {
-  const res = await fetch(`${API_BASE_URL}/api/v1/analytics/eda`);
-  if (!res.ok) throw new Error("Failed to fetch EDA report");
-  return res.json();
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/analytics/eda`);
+  return data || { status: "empty", data: null };
 }
 
 export async function fetchExplorerData(page = 1, limit = 15, search = "", category = "") {
@@ -96,15 +82,13 @@ export async function fetchExplorerData(page = 1, limit = 15, search = "", categ
   if (search) params.append("search", search);
   if (category) params.append("category", category);
 
-  const res = await fetch(`${API_BASE_URL}/api/v1/explorer/data?${params.toString()}`);
-  if (!res.ok) throw new Error("Failed to fetch explorer data");
-  return res.json();
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/explorer/data?${params.toString()}`);
+  return data || { status: "empty", data: [], total: 0 };
 }
 
 export async function fetchEtlLogs() {
-  const res = await fetch(`${API_BASE_URL}/api/v1/etl/logs`);
-  if (!res.ok) throw new Error("Failed to fetch ETL logs");
-  return res.json();
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/etl/logs`);
+  return data || { status: "empty", data: [] };
 }
 
 export async function uploadCsvFile(file: File) {
@@ -115,63 +99,46 @@ export async function uploadCsvFile(file: File) {
     method: "POST",
     body: formData,
   });
-  if (!res.ok) throw new Error("Failed to upload CSV");
+  if (!res.ok) throw new Error("Upload failed with status " + res.status);
   return res.json();
 }
-
-export const uploadAndIngestCSV = uploadCsvFile;
-
-// --- PHASE 3 AI & ML API METHODS ---
 
 export async function fetchMlModels() {
-  const res = await fetch(`${API_BASE_URL}/api/v1/ml/models`);
-  if (!res.ok) throw new Error("Failed to fetch ML models");
-  return res.json();
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/ml/models`);
+  return data || { status: "empty", count: 0, data: [] };
 }
 
-export async function fetchModelDetails(modelId: string) {
-  const res = await fetch(`${API_BASE_URL}/api/v1/ml/models/${modelId}`);
-  if (!res.ok) throw new Error(`Failed to fetch details for model ${modelId}`);
-  return res.json();
-}
-
-export async function predictModel(modelId: string, payload: Record<string, any>) {
+export async function predictModel(modelId: string, features: Record<string, number>) {
   const res = await fetch(`${API_BASE_URL}/api/v1/ml/predict/${modelId}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ features }),
   });
-  if (!res.ok) throw new Error(`Prediction error for model ${modelId}`);
+  if (!res.ok) throw new Error("Prediction failed");
   return res.json();
 }
 
-export async function fetchForecastSummary(horizon = 30) {
-  const res = await fetch(`${API_BASE_URL}/api/v1/forecast/summary?horizon=${horizon}`);
-  if (!res.ok) throw new Error("Failed to fetch forecast summary");
-  return res.json();
+export async function fetchForecastSummary(horizonDays = 30) {
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/forecast/summary?horizon=${horizonDays}`);
+  return data || { status: "empty", data: null };
 }
 
 export async function fetchAnomalies() {
-  const res = await fetch(`${API_BASE_URL}/api/v1/anomalies/detect`);
-  if (!res.ok) throw new Error("Failed to fetch anomalies");
-  return res.json();
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/anomalies/detect`);
+  return data || { status: "empty", data: null };
 }
 
-export async function fetchSegmentationClusters(clusters = 5) {
-  const res = await fetch(`${API_BASE_URL}/api/v1/segmentation/clusters?clusters=${clusters}`);
-  if (!res.ok) throw new Error("Failed to fetch segmentation clusters");
-  return res.json();
+export async function fetchSegmentationClusters(nClusters = 5) {
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/segmentation/clusters?clusters=${nClusters}`);
+  return data || { status: "empty", data: null };
 }
 
 export async function fetchRecommendations() {
-  const res = await fetch(`${API_BASE_URL}/api/v1/recommendations/latest`);
-  if (!res.ok) throw new Error("Failed to fetch recommendations");
-  return res.json();
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/recommendations/latest`);
+  return data || { status: "empty", data: null };
 }
 
 export async function fetchExecutiveInsights() {
-  const res = await fetch(`${API_BASE_URL}/api/v1/insights/executive`);
-  if (!res.ok) throw new Error("Failed to fetch executive insights");
-  return res.json();
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/insights/executive`);
+  return data || { status: "empty", data: null };
 }
-
