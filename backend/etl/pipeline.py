@@ -81,10 +81,19 @@ class ETLPipelineEngine:
                 cust_id_raw = str(self._get_col_val(row, ["customer_id", "customerid", "user_id", "client_id", "customer"], f"CUST-GEN-{idx}")).strip()
                 category_raw = str(self._get_col_val(row, ["category", "product_category", "type", "group", "item_category"], "General")).strip()
                 
+                has_amount_col = False
+                for alias in ["sales_amount", "total_amount", "amount", "total", "price", "sales", "total_price", "value", "revenue"]:
+                    if alias in [str(k).lower().strip() for k in row.keys()]:
+                        has_amount_col = True
+                        break
+
                 amount_val = self._get_col_val(row, ["sales_amount", "total_amount", "amount", "total", "price", "sales", "total_price", "value", "revenue"], 150.0)
                 try:
                     sales_amount = float(amount_val)
-                    if sales_amount <= 0:
+                    if has_amount_col and sales_amount <= 0:
+                        rejected += 1
+                        continue
+                    elif sales_amount <= 0:
                         sales_amount = 150.0
                 except (ValueError, TypeError):
                     sales_amount = 150.0
