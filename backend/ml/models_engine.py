@@ -31,8 +31,8 @@ class ProductionModelsEngine:
 
     def _train_customer_purchase(self) -> Dict[str, Any]:
         df = self.fe.extract_customer_features()
-        if len(df) < 5:
-            # Fallback synthetic training data if DB dataset is small
+        if len(df) < 5 or ("will_purchase" in df.columns and df["will_purchase"].nunique() < 2):
+            # Fallback synthetic training data if DB dataset is small or single-class
             df = pd.DataFrame({
                 "total_orders": np.random.randint(1, 20, 100),
                 "total_spent": np.random.uniform(50, 2000, 100),
@@ -63,7 +63,7 @@ class ProductionModelsEngine:
 
     def _train_customer_churn(self) -> Dict[str, Any]:
         df = self.fe.extract_customer_features()
-        if len(df) < 5:
+        if len(df) < 5 or ("is_churned" in df.columns and df["is_churned"].nunique() < 2):
             df = pd.DataFrame({
                 "recency_days": np.random.randint(1, 120, 100),
                 "session_count": np.random.randint(1, 30, 100),
@@ -182,7 +182,7 @@ class ProductionModelsEngine:
 
     def _train_delivery_delay(self) -> Dict[str, Any]:
         df = self.fe.extract_logistics_features()
-        if len(df) < 5:
+        if len(df) < 5 or ("is_delayed" in df.columns and df["is_delayed"].nunique() < 2):
             df = pd.DataFrame({
                 "warehouse_id": np.random.randint(1, 5, 60),
                 "delay_hours": np.random.uniform(0, 12, 60),
@@ -292,15 +292,16 @@ class ProductionModelsEngine:
 
     def _train_return_probability(self) -> Dict[str, Any]:
         df = self.fe.extract_product_features()
-        if len(df) < 5:
+        if len(df) >= 5 and "return_probability" in df.columns:
+            df["high_return"] = df["return_probability"].apply(lambda x: 1 if x > 0.07 else 0)
+
+        if len(df) < 5 or "high_return" not in df.columns or df["high_return"].nunique() < 2:
             df = pd.DataFrame({
                 "price": np.random.uniform(15, 600, 60),
                 "margin": np.random.uniform(0.1, 0.65, 60),
                 "stockout_risk": np.random.choice([0, 1], 60),
                 "high_return": np.random.choice([0, 1], 60, p=[0.85, 0.15])
             })
-        else:
-            df["high_return"] = df["return_probability"].apply(lambda x: 1 if x > 0.07 else 0)
 
         features = ["price", "margin", "stockout_risk"]
         pipeline = MachineLearningPipeline()
