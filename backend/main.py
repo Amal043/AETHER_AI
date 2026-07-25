@@ -64,6 +64,15 @@ def on_startup():
         db.close()
 
 
+@app.get("/")
+def root():
+    return {
+        "status": "healthy",
+        "service": settings.APP_NAME,
+        "version": settings.APP_VERSION,
+        "documentation": "/docs",
+    }
+
 @app.get("/health")
 def health_check():
     return {
