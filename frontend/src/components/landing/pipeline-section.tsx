@@ -18,6 +18,7 @@ export const PipelineSection: React.FC = () => {
   const handleDemoRun = async () => {
     setLoading(true);
     setError(null);
+    setReport(null);
     try {
       const realDatasetStream = `order_id,customer_id,category,sales_amount,quantity,order_date
 ORD-8801,CUST-901,Electronics,499.99,1,2026-07-25 10:00:00
@@ -42,6 +43,7 @@ ORD-8805,CUST-905,Electronics,1250.00,1,2026-07-25 15:45:00`;
     const file = e.target.files[0];
     setLoading(true);
     setError(null);
+    setReport(null);
     try {
       const res = await uploadAndIngestCSV(file);
       setReport(res.data || res);
