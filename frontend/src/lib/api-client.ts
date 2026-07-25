@@ -165,11 +165,6 @@ export async function fetchForecastSummary(horizonDays = 30) {
   return data || { status: "empty", data: null };
 }
 
-export async function fetchAnomalies() {
-  const data = await safeFetch(`${API_BASE_URL}/api/v1/anomalies/detect`);
-  return data || { status: "empty", data: null };
-}
-
 export async function fetchSegmentationClusters(nClusters = 5) {
   const data = await safeFetch(`${API_BASE_URL}/api/v1/segmentation/clusters?clusters=${nClusters}`);
   return data || { status: "empty", data: null };
