@@ -103,6 +103,13 @@ export async function uploadCsvFile(file: File) {
   return res.json();
 }
 
+export const uploadAndIngestCSV = uploadCsvFile;
+
+export async function runDemoPipelineStream() {
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/analytics/eda`);
+  return data || { status: "success", data: null };
+}
+
 export async function fetchMlModels() {
   const data = await safeFetch(`${API_BASE_URL}/api/v1/ml/models`);
   return data || { status: "empty", count: 0, data: [] };
