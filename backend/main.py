@@ -43,10 +43,14 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.options("/{full_path:path}")
+def options_handler(full_path: str):
+    return {}
 
 @app.on_event("startup")
 def on_startup():
