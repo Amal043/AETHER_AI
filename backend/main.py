@@ -2,7 +2,7 @@ import logging
 import datetime
 import numpy as np
 from typing import Optional, List
-from fastapi import FastAPI, Depends, File, UploadFile, Query, HTTPException
+from fastapi import FastAPI, Depends, File, UploadFile, Query, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import func
@@ -79,22 +79,22 @@ def version():
 
 # --- ETL ENDPOINTS ---
 
-@app.post("/api/v1/etl/upload")
-async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    if not file.filename.endswith(".csv"):
-        raise HTTPException(status_code=400, detail="Only .csv files are supported.")
-    
-    contents = await file.read()
-    pipeline = ETLPipelineEngine(db)
-    report = pipeline.process_csv_stream(contents, file.filename)
-    
-    # Automatically retrain ML models and refresh AI pipeline
+def _bg_retrain(db: Session):
     try:
         models_engine = ProductionModelsEngine(db)
         models_engine.train_all_models()
         logger.info("Automated ML retraining completed post-CSV upload.")
     except Exception as e:
         logger.error(f"Error during automated ML retraining: {e}")
+
+@app.post("/api/v1/etl/upload")
+async def upload_csv(background_tasks: BackgroundTasks, file: UploadFile = File(...), db: Session = Depends(get_db)):
+    contents = await file.read()
+    pipeline = ETLPipelineEngine(db)
+    report = pipeline.process_csv_stream(contents, file.filename or "uploaded_dataset.csv")
+    
+    # Schedule background retraining without blocking HTTP response
+    background_tasks.add_task(_bg_retrain, db)
 
     return {"status": "success", "data": report}
 
