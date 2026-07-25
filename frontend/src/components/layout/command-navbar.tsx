@@ -6,6 +6,7 @@ import { useScrollPosition } from "@/hooks/use-scroll-position";
 import { AnimatedButton } from "@/components/ui/animated-button";
 import { fetchBackendHealth, HealthCheckResponse } from "@/lib/api-client";
 import { HudBadge } from "@/components/hud/hud-badge";
+import { AetherLogo } from "@/components/common/aether-logo";
 import { Cpu, Menu, X, ArrowUpRight } from "lucide-react";
 
 export const CommandNavbar: React.FC = () => {
@@ -28,11 +29,10 @@ export const CommandNavbar: React.FC = () => {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+
         {/* Brand */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="p-2 rounded-xl bg-sky-600 text-white font-bold shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform">
-            <Cpu className="w-5 h-5" />
-          </div>
+          <AetherLogo className="w-10 h-10 group-hover:scale-105 transition-transform drop-shadow-sm" />
           <div className="flex flex-col">
             <span className="font-extrabold text-lg text-slate-900 tracking-tight font-mono">
               AETHER

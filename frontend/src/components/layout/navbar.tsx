@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useScrollPosition } from "@/hooks/use-scroll-position";
 import { AnimatedButton } from "@/components/ui/animated-button";
+import { AetherLogo } from "@/components/common/aether-logo";
 import { Cpu, Menu, X, ArrowUpRight, CheckCircle2, Server } from "lucide-react";
 
 export const Navbar: React.FC = () => {
@@ -34,11 +35,10 @@ export const Navbar: React.FC = () => {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="p-2.5 rounded-xl bg-gradient-to-tr from-sky-600 via-blue-600 to-indigo-600 text-white shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform duration-300">
-            <Cpu className="w-5 h-5" />
-          </div>
+          <AetherLogo className="w-10 h-10 group-hover:scale-105 transition-transform duration-300 drop-shadow-sm" />
           <div>
             <span className="font-extrabold text-lg sm:text-xl text-slate-900 tracking-tight font-mono">AETHER</span>
             <span className="text-[10px] uppercase font-mono tracking-[0.2em] block text-sky-600 -mt-1 font-bold">

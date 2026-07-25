@@ -2,7 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
-import { Cpu, Terminal, Code2, Share2, Globe } from "lucide-react";
+import { AetherLogo } from "@/components/common/aether-logo";
+import { Terminal, Code2, Share2, Globe } from "lucide-react";
 
 export const CommandFooter: React.FC = () => {
   return (
@@ -11,9 +12,7 @@ export const CommandFooter: React.FC = () => {
         {/* Brand Info */}
         <div className="md:col-span-2 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-sky-600 text-white font-bold shadow-md">
-              <Cpu className="w-5 h-5" />
-            </div>
+            <AetherLogo className="w-8 h-8 drop-shadow-sm" />
             <span className="font-extrabold text-xl text-slate-900 tracking-tight">AETHER ENGINE</span>
           </div>
           <p className="text-xs text-slate-600 max-w-sm leading-relaxed font-sans">
