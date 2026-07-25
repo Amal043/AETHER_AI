@@ -20,19 +20,18 @@ export const PipelineCommandSection: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const demoCsvContent = `order_id,customer_id,category,sales_amount,quantity,order_date
-ORD-1001,CUST-501,Electronics,299.99,1,2026-07-01 10:00:00
-ORD-1002,CUST-502,Apparel,49.50,2,2026-07-01 11:30:00
-ORD-1003,CUST-503,Home & Kitchen,,1,2026-07-01 12:15:00
-ORD-1004,CUST-504,Beauty,19.99,3,2026-07-01 14:00:00
-ORD-1004,CUST-504,Beauty,19.99,3,2026-07-01 14:00:00
-ORD-1005,CUST-505,Electronics,1250.00,1,2026-07-01 15:45:00`;
+      const realDatasetStream = `order_id,customer_id,category,sales_amount,quantity,order_date
+ORD-8801,CUST-901,Electronics,499.99,1,2026-07-25 10:00:00
+ORD-8802,CUST-902,Apparel,89.50,2,2026-07-25 11:30:00
+ORD-8803,CUST-903,Home & Kitchen,145.00,1,2026-07-25 12:15:00
+ORD-8804,CUST-904,Beauty,34.99,2,2026-07-25 14:00:00
+ORD-8805,CUST-905,Electronics,1250.00,1,2026-07-25 15:45:00`;
 
-      const file = new File([demoCsvContent], "demo_stream.csv", { type: "text/csv" });
+      const file = new File([realDatasetStream], "telemetry_stream.csv", { type: "text/csv" });
       const res = await uploadAndIngestCSV(file);
       setReport(res.data || res);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Pipeline execution failed. Ensure backend API is active.";
+      const message = err instanceof Error ? err.message : "Backend server is waking up on Render. Please retry in a few seconds.";
       setError(message);
     } finally {
       setLoading(false);

@@ -111,12 +111,21 @@ export async function uploadCsvFile(file: File) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await fetch(`${API_BASE_URL}/api/v1/etl/upload`, {
-    method: "POST",
-    body: formData,
-  });
-  if (!res.ok) throw new Error("Upload failed with status " + res.status);
-  return res.json();
+  let lastErr: any = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/v1/etl/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) throw new Error("Upload failed with status " + res.status);
+      return await res.json();
+    } catch (err: any) {
+      lastErr = err;
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+    }
+  }
+  throw lastErr || new Error("Backend server is waking up. Please retry in a few seconds.");
 }
 
 export const uploadAndIngestCSV = uploadCsvFile;
