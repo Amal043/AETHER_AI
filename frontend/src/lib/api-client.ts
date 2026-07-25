@@ -18,6 +18,22 @@ export interface HealthCheckResponse {
   environment: string;
 }
 
+export interface IngestionReportResponse {
+  status: string;
+  filename: string;
+  execution_time_seconds: number;
+  quality_score: number;
+  summary: {
+    total_rows: number;
+    imported_rows: number;
+    rejected_rows: number;
+    overall_completeness_pct: number;
+    duplicate_rows_count: number;
+  };
+  columns: any[];
+  log: string;
+}
+
 export async function safeFetch(url: string, options?: RequestInit) {
   try {
     const res = await fetch(url, { cache: "no-store", ...options });
