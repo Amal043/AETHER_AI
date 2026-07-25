@@ -1,0 +1,499 @@
+{
+  "customer_purchase": {
+    "model_id": "customer_purchase",
+    "name": "Customer Purchase Likelihood Predictor",
+    "category": "Customer Intelligence",
+    "algorithm": "RandomForestClassifier",
+    "version": 4,
+    "filename": "customer_purchase_v4.joblib",
+    "updated_at": "2026-07-25T16:19:00.079840",
+    "metrics": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "roc_auc": 1.0,
+      "roc_curve": {
+        "fpr": [
+          0.0,
+          0.0,
+          0.0,
+          0.5,
+          1.0
+        ],
+        "tpr": [
+          0.0,
+          0.1667,
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "confusion_matrix": [
+        [
+          4,
+          0
+        ],
+        [
+          0,
+          6
+        ]
+      ],
+      "feature_importance": [
+        {
+          "feature": "recency_days",
+          "importance": 0.4184
+        },
+        {
+          "feature": "total_orders",
+          "importance": 0.3013
+        },
+        {
+          "feature": "total_spent",
+          "importance": 0.1786
+        },
+        {
+          "feature": "session_count",
+          "importance": 0.0722
+        },
+        {
+          "feature": "bounce_rate",
+          "importance": 0.0295
+        }
+      ]
+    },
+    "feature_names": [
+      "total_orders",
+      "total_spent",
+      "recency_days",
+      "session_count",
+      "bounce_rate"
+    ],
+    "status": "Active"
+  },
+  "customer_churn": {
+    "model_id": "customer_churn",
+    "name": "Customer Churn Risk Classifier",
+    "category": "Customer Intelligence",
+    "algorithm": "GradientBoostingClassifier",
+    "version": 4,
+    "filename": "customer_churn_v4.joblib",
+    "updated_at": "2026-07-25T16:19:00.290000",
+    "metrics": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "roc_auc": 1.0,
+      "roc_curve": {
+        "fpr": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "tpr": [
+          0.0,
+          1.0,
+          1.0
+        ]
+      },
+      "confusion_matrix": [
+        [
+          8,
+          0
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "feature_importance": [
+        {
+          "feature": "recency_days",
+          "importance": 1.0
+        },
+        {
+          "feature": "session_count",
+          "importance": 0.0
+        },
+        {
+          "feature": "bounce_rate",
+          "importance": 0.0
+        },
+        {
+          "feature": "total_spent",
+          "importance": 0.0
+        }
+      ]
+    },
+    "feature_names": [
+      "recency_days",
+      "session_count",
+      "bounce_rate",
+      "total_spent"
+    ],
+    "status": "Active"
+  },
+  "demand_forecasting": {
+    "model_id": "demand_forecasting",
+    "name": "Product Demand Spike Forecaster",
+    "category": "Supply Chain",
+    "algorithm": "RandomForestRegressor",
+    "version": 3,
+    "filename": "demand_forecasting_v3.joblib",
+    "updated_at": "2026-07-25T16:19:00.759627",
+    "metrics": {
+      "mae": 2891.8106,
+      "mse": 12798043.4347,
+      "rmse": 3577.4353,
+      "r2_score": 0.0,
+      "feature_importance": [
+        {
+          "feature": "lag_7_revenue",
+          "importance": 0.5361
+        },
+        {
+          "feature": "lag_1_revenue",
+          "importance": 0.3633
+        },
+        {
+          "feature": "day_of_week",
+          "importance": 0.0886
+        },
+        {
+          "feature": "is_weekend",
+          "importance": 0.0121
+        }
+      ]
+    },
+    "feature_names": [
+      "day_of_week",
+      "is_weekend",
+      "lag_1_revenue",
+      "lag_7_revenue"
+    ],
+    "status": "Active"
+  },
+  "revenue_forecasting": {
+    "model_id": "revenue_forecasting",
+    "name": "Gross Revenue Trajectory Forecaster",
+    "category": "Financial Intelligence",
+    "algorithm": "RidgeRegression",
+    "version": 3,
+    "filename": "revenue_forecasting_v3.joblib",
+    "updated_at": "2026-07-25T16:19:00.971207",
+    "metrics": {
+      "mae": 679.4398,
+      "mse": 642599.7762,
+      "rmse": 801.6232,
+      "r2_score": 0.8514,
+      "feature_importance": [
+        {
+          "feature": "order_count",
+          "importance": 2472.1123
+        },
+        {
+          "feature": "avg_discount",
+          "importance": 1890.0923
+        },
+        {
+          "feature": "lag_1_revenue",
+          "importance": 196.5666
+        }
+      ]
+    },
+    "feature_names": [
+      "order_count",
+      "avg_discount",
+      "lag_1_revenue"
+    ],
+    "status": "Active"
+  },
+  "inventory_forecasting": {
+    "model_id": "inventory_forecasting",
+    "name": "Warehouse Stock Depletion Forecaster",
+    "category": "Supply Chain",
+    "algorithm": "ExtraTreesRegressor",
+    "version": 3,
+    "filename": "inventory_forecasting_v3.joblib",
+    "updated_at": "2026-07-25T16:19:01.135106",
+    "metrics": {
+      "mae": 197.7625,
+      "mse": 54833.3807,
+      "rmse": 234.1653,
+      "r2_score": 0.0,
+      "feature_importance": [
+        {
+          "feature": "margin",
+          "importance": 0.291
+        },
+        {
+          "feature": "price",
+          "importance": 0.2633
+        },
+        {
+          "feature": "cost",
+          "importance": 0.2599
+        },
+        {
+          "feature": "total_units_sold",
+          "importance": 0.1858
+        }
+      ]
+    },
+    "feature_names": [
+      "price",
+      "cost",
+      "margin",
+      "total_units_sold"
+    ],
+    "status": "Active"
+  },
+  "delivery_delay": {
+    "model_id": "delivery_delay",
+    "name": "Carrier Shipping Delay Predictor",
+    "category": "Logistics Intelligence",
+    "algorithm": "RandomForestClassifier",
+    "version": 3,
+    "filename": "delivery_delay_v3.joblib",
+    "updated_at": "2026-07-25T16:19:01.337140",
+    "metrics": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "roc_auc": 1.0,
+      "roc_curve": {
+        "fpr": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "tpr": [
+          0.0,
+          0.8462,
+          1.0,
+          1.0
+        ]
+      },
+      "confusion_matrix": [
+        [
+          17,
+          0
+        ],
+        [
+          0,
+          13
+        ]
+      ],
+      "feature_importance": [
+        {
+          "feature": "delay_hours",
+          "importance": 0.9838
+        },
+        {
+          "feature": "warehouse_id",
+          "importance": 0.0162
+        }
+      ]
+    },
+    "feature_names": [
+      "warehouse_id",
+      "delay_hours"
+    ],
+    "status": "Active"
+  },
+  "order_cancellation": {
+    "model_id": "order_cancellation",
+    "name": "Order Cancellation & Drop-off Risk Engine",
+    "category": "Sales Telemetry",
+    "algorithm": "LogisticRegression",
+    "version": 3,
+    "filename": "order_cancellation_v3.joblib",
+    "updated_at": "2026-07-25T16:19:01.389979",
+    "metrics": {
+      "accuracy": 1.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "roc_auc": 0.85,
+      "roc_curve": {
+        "fpr": [
+          0.0,
+          0.05,
+          1.0
+        ],
+        "tpr": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "confusion_matrix": [
+        [
+          20
+        ]
+      ],
+      "feature_importance": [
+        {
+          "feature": "total_amount",
+          "importance": 0.7488
+        },
+        {
+          "feature": "item_count",
+          "importance": 0.4802
+        },
+        {
+          "feature": "discount_ratio",
+          "importance": 0.1607
+        }
+      ]
+    },
+    "feature_names": [
+      "discount_ratio",
+      "item_count",
+      "total_amount"
+    ],
+    "status": "Active"
+  },
+  "warehouse_load": {
+    "model_id": "warehouse_load",
+    "name": "Distribution Node Capacity & Utilization Forecaster",
+    "category": "Supply Chain",
+    "algorithm": "RidgeRegression",
+    "version": 3,
+    "filename": "warehouse_load_v3.joblib",
+    "updated_at": "2026-07-25T16:19:01.406630",
+    "metrics": {
+      "mae": 15.8189,
+      "mse": 313.9633,
+      "rmse": 17.719,
+      "r2_score": 0.0427,
+      "feature_importance": [
+        {
+          "feature": "active_workers",
+          "importance": 2.8694
+        },
+        {
+          "feature": "inbound_units",
+          "importance": 0.5541
+        },
+        {
+          "feature": "outbound_units",
+          "importance": 0.208
+        }
+      ]
+    },
+    "feature_names": [
+      "inbound_units",
+      "outbound_units",
+      "active_workers"
+    ],
+    "status": "Active"
+  },
+  "customer_ltv": {
+    "model_id": "customer_ltv",
+    "name": "Customer Lifetime Value (LTV) Estimator",
+    "category": "Customer Intelligence",
+    "algorithm": "RandomForestRegressor",
+    "version": 3,
+    "filename": "customer_ltv_v3.joblib",
+    "updated_at": "2026-07-25T16:19:01.647308",
+    "metrics": {
+      "mae": 383.4046,
+      "mse": 293665.6271,
+      "rmse": 541.9092,
+      "r2_score": 0.9928,
+      "feature_importance": [
+        {
+          "feature": "total_spent",
+          "importance": 0.9616
+        },
+        {
+          "feature": "total_orders",
+          "importance": 0.0273
+        },
+        {
+          "feature": "recency_days",
+          "importance": 0.0086
+        },
+        {
+          "feature": "session_count",
+          "importance": 0.0025
+        }
+      ]
+    },
+    "feature_names": [
+      "total_orders",
+      "total_spent",
+      "session_count",
+      "recency_days"
+    ],
+    "status": "Active"
+  },
+  "return_probability": {
+    "model_id": "return_probability",
+    "name": "Product Return Probability & Risk Classifier",
+    "category": "Quality Control",
+    "algorithm": "GradientBoostingClassifier",
+    "version": 3,
+    "filename": "return_probability_v3.joblib",
+    "updated_at": "2026-07-25T16:19:01.770174",
+    "metrics": {
+      "accuracy": 0.3333,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "roc_auc": 0.5556,
+      "roc_curve": {
+        "fpr": [
+          0.0,
+          0.3333,
+          0.3333,
+          0.6667,
+          0.6667,
+          1.0
+        ],
+        "tpr": [
+          0.0,
+          0.0,
+          0.6667,
+          0.6667,
+          1.0,
+          1.0
+        ]
+      },
+      "confusion_matrix": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "feature_importance": [
+        {
+          "feature": "margin",
+          "importance": 0.7392
+        },
+        {
+          "feature": "price",
+          "importance": 0.2608
+        },
+        {
+          "feature": "stockout_risk",
+          "importance": 0.0
+        }
+      ]
+    },
+    "feature_names": [
+      "price",
+      "margin",
+      "stockout_risk"
+    ],
+    "status": "Active"
+  }
+}
