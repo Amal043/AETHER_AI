@@ -135,6 +135,22 @@ def get_etl_logs(limit: int = 50, db: Session = Depends(get_db)):
 
 # --- ANALYTICS & KPI ENDPOINTS ---
 
+@app.get("/api/v1/analytics/filters")
+def get_filter_options(db: Session = Depends(get_db)):
+    categories = [r[0] for r in db.query(Product.category).distinct().all() if r[0]]
+    regions = [r[0] for r in db.query(Customer.region).distinct().all() if r[0]]
+    payment_methods = [r[0] for r in db.query(Order.payment_method).distinct().all() if r[0]]
+    statuses = [r[0] for r in db.query(Order.status).distinct().all() if r[0]]
+    return {
+        "status": "success",
+        "data": {
+            "categories": sorted(categories),
+            "regions": sorted(regions),
+            "payment_methods": sorted(payment_methods),
+            "statuses": sorted(statuses),
+        },
+    }
+
 @app.get("/api/v1/analytics/kpis")
 def get_kpis(
     category: Optional[str] = None,

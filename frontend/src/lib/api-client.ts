@@ -45,6 +45,11 @@ export async function safeFetch(url: string, options?: RequestInit) {
   }
 }
 
+export async function fetchFilterOptions() {
+  const data = await safeFetch(`${API_BASE_URL}/api/v1/analytics/filters`);
+  return data || { status: "empty", data: { categories: [], regions: [], payment_methods: [], statuses: [] } };
+}
+
 export async function fetchBackendHealth(): Promise<HealthCheckResponse | null> {
   return await safeFetch(`${API_BASE_URL}/health`);
 }
