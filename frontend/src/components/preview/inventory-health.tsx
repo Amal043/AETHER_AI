@@ -1,16 +1,29 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { HolographicCard } from "@/components/hud/holographic-card";
 import { HudBadge } from "@/components/hud/hud-badge";
 import { Boxes } from "lucide-react";
+import { fetchInventoryAnalytics } from "@/lib/api-client";
 
 export const InventoryHealthWidget: React.FC = () => {
-  const skus = [
-    { name: "SKU-9921 Quantum Core", stock: "14,200", status: "Optimal", health: 98 },
-    { name: "SKU-4412 Neural Sensor", stock: "1,150", status: "Low Stock", health: 42 },
-    { name: "SKU-8810 Flux Node", stock: "8,900", status: "Optimal", health: 94 },
-  ];
+  const [alerts, setAlerts] = useState<any[]>([]);
+  const [totalProducts, setTotalProducts] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    fetchInventoryAnalytics()
+      .then((res) => {
+        if (res && res.data) {
+          setAlerts(res.data.low_stock_alerts || []);
+          setTotalProducts(res.data.total_products || 0);
+        }
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  const hasData = totalProducts > 0;
 
   return (
     <HolographicCard glowColor="emerald" className="p-6">
@@ -21,26 +34,37 @@ export const InventoryHealthWidget: React.FC = () => {
             Inventory Health Matrix
           </h3>
         </div>
-        <HudBadge label="Stock In-Sync" variant="emerald" />
+        <HudBadge label={hasData ? `${totalProducts} Products Ingested` : "Awaiting Data Upload"} variant={hasData ? "emerald" : "indigo"} />
       </div>
 
-      <div className="space-y-3 font-mono text-xs">
-        {skus.map((sku) => (
-          <div key={sku.name} className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between">
-            <div>
-              <div className="text-white font-bold">{sku.name}</div>
-              <div className="text-slate-400 text-[10px]">Stock Level: {sku.stock} units</div>
+      {hasData ? (
+        <div className="space-y-3 font-mono text-xs">
+          {alerts.length > 0 ? (
+            alerts.slice(0, 3).map((p: any, idx: number) => (
+              <div key={idx} className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between">
+                <div>
+                  <div className="text-white font-bold">{p.title}</div>
+                  <div className="text-slate-400 text-[10px]">Stock Level: {p.stock_qty} units</div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] px-2 py-0.5 rounded border bg-rose-500/10 text-rose-400 border-rose-500/20 font-bold">
+                    Low Stock Alert
+                  </span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-6 text-emerald-400 font-mono text-xs">
+              All {totalProducts} uploaded products maintain optimal stock levels (&gt; 50 units).
             </div>
-            <div className="flex items-center gap-2">
-              <span className={`text-[10px] px-2 py-0.5 rounded border ${
-                sku.health < 50 ? "bg-rose-500/10 text-rose-400 border-rose-500/20" : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-              }`}>
-                {sku.status}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
+          )}
+        </div>
+      ) : (
+        <div className="text-center py-8 text-slate-400 font-mono text-xs space-y-2">
+          <div>No product inventory telemetry uploaded yet.</div>
+          <div className="text-[11px] text-slate-500">Upload CSV with stock_qty and product titles to monitor stock matrix.</div>
+        </div>
+      )}
     </HolographicCard>
   );
 };
