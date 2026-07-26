@@ -44,18 +44,27 @@ export const CommandNavbar: React.FC = () => {
         </Link>
 
         {/* Desktop Links */}
-        <nav className="hidden md:flex items-center gap-8 text-xs font-mono font-medium text-slate-600">
-          <Link href="#features" className="hover:text-sky-600 transition-colors">
-            FUNNEL ENGINE
+        <nav className="hidden xl:flex items-center gap-6 text-xs font-mono font-bold text-slate-700">
+          <Link href="/overview" className="hover:text-sky-600 transition-colors">
+            OVERVIEW
           </Link>
-          <Link href="#architecture" className="hover:text-sky-600 transition-colors">
-            SPECS
+          <Link href="/sales" className="hover:text-sky-600 transition-colors">
+            SALES
           </Link>
-          <Link href="#pipeline" className="hover:text-sky-600 transition-colors">
-            LIVE INGESTION
+          <Link href="/forecast" className="hover:text-sky-600 transition-colors">
+            FORECAST
           </Link>
-          <Link href="#why-us" className="hover:text-sky-600 transition-colors">
-            LOGISTICS
+          <Link href="/anomalies" className="hover:text-sky-600 transition-colors">
+            ANOMALIES
+          </Link>
+          <Link href="/prediction-center" className="hover:text-sky-600 transition-colors">
+            PREDICTIONS
+          </Link>
+          <Link href="/ai-insights" className="hover:text-sky-600 transition-colors">
+            AI INSIGHTS
+          </Link>
+          <Link href="/ingestion" className="hover:text-sky-600 transition-colors">
+            ETL UPLOAD
           </Link>
         </nav>
 
@@ -65,22 +74,18 @@ export const CommandNavbar: React.FC = () => {
             label={health ? `API v${health.version} ONLINE` : "API CONNECTING..."}
             variant={health ? "emerald" : "indigo"}
           />
-          <AnimatedButton
-            variant="glow"
-            size="sm"
-            onClick={() => {
-              document.getElementById("pipeline")?.scrollIntoView({ behavior: "smooth" });
-            }}
-          >
-            <span>TEST PIPELINE</span>
-            <ArrowUpRight className="w-4 h-4" />
-          </AnimatedButton>
+          <Link href="/overview">
+            <AnimatedButton variant="glow" size="sm">
+              <span>COMMAND DASHBOARD</span>
+              <ArrowUpRight className="w-4 h-4" />
+            </AnimatedButton>
+          </Link>
         </div>
 
         {/* Mobile menu trigger */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 rounded-xl bg-white border border-slate-200 text-slate-700"
+          className="xl:hidden p-2 rounded-xl bg-white border border-slate-200 text-slate-700"
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -88,18 +93,33 @@ export const CommandNavbar: React.FC = () => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white/95 backdrop-blur-xl border-b border-slate-200 px-6 py-6 space-y-4 font-mono text-sm text-slate-700">
-          <Link href="#features" onClick={() => setMobileMenuOpen(false)} className="block py-2">
-            FUNNEL ENGINE
+        <div className="xl:hidden bg-white/95 backdrop-blur-xl border-b border-slate-200 px-6 py-6 space-y-3 font-mono text-sm text-slate-800">
+          <Link href="/overview" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 font-bold hover:text-sky-600">
+            📊 OVERVIEW DASHBOARD
           </Link>
-          <Link href="#architecture" onClick={() => setMobileMenuOpen(false)} className="block py-2">
-            SPECS
+          <Link href="/sales" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 font-bold hover:text-sky-600">
+            📈 SALES INTELLIGENCE
           </Link>
-          <Link href="#pipeline" onClick={() => setMobileMenuOpen(false)} className="block py-2">
-            LIVE INGESTION
+          <Link href="/forecast" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 font-bold hover:text-sky-600">
+            🤖 FORECAST COMMAND HUB
           </Link>
-          <Link href="#why-us" onClick={() => setMobileMenuOpen(false)} className="block py-2">
-            LOGISTICS
+          <Link href="/anomalies" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 font-bold hover:text-sky-600">
+            🚨 ANOMALY MATRIX
+          </Link>
+          <Link href="/prediction-center" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 font-bold hover:text-sky-600">
+            🎯 PREDICTION SANDBOX
+          </Link>
+          <Link href="/ai-insights" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 font-bold hover:text-sky-600">
+            💡 AI EXECUTIVE BRIEFING
+          </Link>
+          <Link href="/segmentation" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 font-bold hover:text-sky-600">
+            👥 CUSTOMER SEGMENTS
+          </Link>
+          <Link href="/recommendations" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 font-bold hover:text-sky-600">
+            ⚡ AI RECOMMENDATIONS
+          </Link>
+          <Link href="/ingestion" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 font-bold hover:text-sky-600">
+            📂 ETL INGESTION UPLOAD
           </Link>
         </div>
       )}

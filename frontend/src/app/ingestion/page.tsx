@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { uploadCsvFile, fetchEtlLogs } from "@/lib/api-client";
-import { UploadCloud, CheckCircle2, FileText, Clipboard, Sparkles } from "lucide-react";
+import { UploadCloud, CheckCircle2, FileText, Clipboard, Sparkles, BarChart2, TrendingUp, AlertTriangle, Cpu, ArrowRight } from "lucide-react";
 
 export default function IngestionPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -134,14 +135,57 @@ export default function IngestionPage() {
 
             {/* REPORT SUMMARY */}
             {report && (
-              <div className="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono space-y-2">
-                <div className="flex items-center gap-2 text-emerald-600 font-bold">
-                  <CheckCircle2 className="w-4 h-4" /> Ingestion Completed
+              <div className="mt-6 p-5 rounded-2xl bg-slate-50 border border-slate-200 font-mono space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                  <div className="flex items-center gap-2 text-emerald-600 font-bold text-sm">
+                    <CheckCircle2 className="w-5 h-5" /> Dataset Successfully Ingested!
+                  </div>
+                  <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold">
+                    Score: {report.quality_score}/100
+                  </span>
                 </div>
-                <div>Execution Time: {report.execution_time_seconds}s</div>
-                <div>Quality Score: {report.quality_score}/100</div>
-                <div>Imported Rows: {report.summary.imported_rows}</div>
-                <div>Rejected Rows: {report.summary.rejected_rows}</div>
+
+                <div className="grid grid-cols-2 gap-2 text-xs text-slate-700">
+                  <div>Imported Rows: <strong className="text-slate-900">{report.summary.imported_rows}</strong></div>
+                  <div>Execution Time: <strong className="text-slate-900">{report.execution_time_seconds}s</strong></div>
+                </div>
+
+                {/* POST INGESTION DASHBOARD ACTION HUB */}
+                <div className="pt-2">
+                  <div className="text-[11px] uppercase tracking-wider font-bold text-sky-700 mb-2">
+                    Explore New Data Dashboards &amp; AI Predictions:
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <Link
+                      href="/overview"
+                      className="p-2.5 rounded-xl bg-white border border-slate-200 hover:border-sky-500 hover:shadow-sm transition-all flex items-center justify-between text-xs font-bold text-slate-800"
+                    >
+                      <span className="flex items-center gap-1.5"><BarChart2 className="w-3.5 h-3.5 text-sky-600" /> Executive Overview</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                    </Link>
+                    <Link
+                      href="/sales"
+                      className="p-2.5 rounded-xl bg-white border border-slate-200 hover:border-sky-500 hover:shadow-sm transition-all flex items-center justify-between text-xs font-bold text-slate-800"
+                    >
+                      <span className="flex items-center gap-1.5"><TrendingUp className="w-3.5 h-3.5 text-emerald-600" /> Sales Intelligence</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                    </Link>
+                    <Link
+                      href="/forecast"
+                      className="p-2.5 rounded-xl bg-white border border-slate-200 hover:border-sky-500 hover:shadow-sm transition-all flex items-center justify-between text-xs font-bold text-slate-800"
+                    >
+                      <span className="flex items-center gap-1.5"><Cpu className="w-3.5 h-3.5 text-indigo-600" /> AI Forecast Hub</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                    </Link>
+                    <Link
+                      href="/anomalies"
+                      className="p-2.5 rounded-xl bg-white border border-slate-200 hover:border-sky-500 hover:shadow-sm transition-all flex items-center justify-between text-xs font-bold text-slate-800"
+                    >
+                      <span className="flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5 text-amber-600" /> Threat Anomalies</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                    </Link>
+                  </div>
+                </div>
               </div>
             )}
           </div>
