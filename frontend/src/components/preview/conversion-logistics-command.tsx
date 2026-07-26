@@ -73,7 +73,7 @@ export const ConversionLogisticsCommand: React.FC = () => {
             AETHER Data Stream Engine // Uploaded Dataset Telemetry & Anomaly Matrix
           </p>
         </div>
-        <HudBadge label={hasOrders ? `${totalOrders} Ingested Orders Active` : "AWAITING CSV DATASET"} variant={hasOrders ? "emerald" : "amber"} />
+        <HudBadge label={hasOrders ? `${totalOrders} Ingested Orders Active` : "AWAITING CSV DATASET"} variant={hasOrders ? "emerald" : "indigo"} />
       </div>
 
       {!hasOrders ? (
