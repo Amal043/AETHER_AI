@@ -9,12 +9,16 @@ import { ConversionFunnelChart } from "@/components/charts/ConversionFunnelChart
 import { fetchCustomerAnalytics } from "@/lib/api-client";
 import { Users, Filter, PieChart } from "lucide-react";
 
+import { InsufficientDataCard } from "@/components/common/insufficient-data-card";
+
 export default function CustomersPage() {
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
     fetchCustomerAnalytics().then((res) => setData(res.data)).catch(console.error);
   }, []);
+
+  const hasSessionFunnel = data && data.funnel && data.funnel.some((f: any) => f.count > 0);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans">
@@ -34,6 +38,15 @@ export default function CustomersPage() {
         </div>
 
         <GlobalFilterBar />
+
+        {data && !hasSessionFunnel && (
+          <InsufficientDataCard
+            title="Session Conversion & Funnel Data Missing"
+            description="To compute session conversion rates, cart abandonment, and funnel stages, the system requires web/app session clickstream telemetry."
+            requiredColumns={["session_key / user_id", "cart_added (true/false)", "checkout_started (true/false)", "purchase_completed (true/false)", "bounce (true/false)"]}
+            suggestedAction="Upload a session telemetry CSV dataset or connect a session event stream to unlock full funnel tracking."
+          />
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
           <div className="bg-white/80 backdrop-blur-md border border-slate-200 p-6 rounded-2xl shadow-sm">

@@ -11,6 +11,8 @@ import { useFilters } from "@/context/FilterContext";
 import { fetchKpis, fetchRevenueTrends, fetchSalesAnalytics } from "@/lib/api-client";
 import { DollarSign, ShoppingCart, Users, TrendingUp, Sparkles, Activity } from "lucide-react";
 
+import { InsufficientDataCard } from "@/components/common/insufficient-data-card";
+
 export default function OverviewPage() {
   const { filters } = useFilters();
   const [kpis, setKpis] = useState<any>(null);
@@ -39,6 +41,8 @@ export default function OverviewPage() {
     loadData();
   }, [filters]);
 
+  const hasOrders = kpis && kpis.financial.total_orders > 0;
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans">
       <Navbar />
@@ -57,6 +61,15 @@ export default function OverviewPage() {
         </div>
 
         <GlobalFilterBar />
+
+        {!loading && !hasOrders && (
+          <InsufficientDataCard
+            title="No Ingested Dataset Detected for Overview Telemetry"
+            description="The executive command overview requires an uploaded e-commerce transactional dataset containing valid order items, revenue, and customer records."
+            requiredColumns={["order_id", "customer_id", "total_amount / price", "order_date", "category / fooditem"]}
+            suggestedAction="Upload a CSV file containing order and sales data to unlock real-time revenue curves, conversion metrics, and category performance."
+          />
+        )}
 
         {/* KPI CARDS GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">

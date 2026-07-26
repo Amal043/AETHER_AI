@@ -8,12 +8,16 @@ import { ExportBar } from "@/components/dashboard/export-bar";
 import { fetchLogisticsAnalytics } from "@/lib/api-client";
 import { Truck, ShieldCheck, Clock } from "lucide-react";
 
+import { InsufficientDataCard } from "@/components/common/insufficient-data-card";
+
 export default function LogisticsPage() {
   const [logistics, setLogistics] = useState<any>(null);
 
   useEffect(() => {
     fetchLogisticsAnalytics().then((res) => setLogistics(res.data)).catch(console.error);
   }, []);
+
+  const hasShipments = logistics && logistics.total_shipments > 0;
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans">
@@ -33,6 +37,15 @@ export default function LogisticsPage() {
         </div>
 
         <GlobalFilterBar />
+
+        {logistics && !hasShipments && (
+          <InsufficientDataCard
+            title="Carrier Logistics & Shipment Telemetry Missing"
+            description="To profile carrier partner volumes, transit durations, and package fulfillment statuses, the dataset must include shipping records."
+            requiredColumns={["shipment_id / tracking_number", "carrier (e.g. UPS/FedEx/DHL)", "deliver_status / status", "estimated_delivery", "actual_delivery"]}
+            suggestedAction="Upload a logistics CSV dataset with carrier and delivery dates to analyze shipping bottlenecks and delivery speeds."
+          />
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
           <div className="bg-white/80 backdrop-blur-md border border-slate-200 p-6 rounded-2xl shadow-sm">

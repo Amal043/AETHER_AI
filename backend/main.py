@@ -58,12 +58,16 @@ def on_startup():
     db = next(get_db())
     try:
         seed_database(db)
-        try:
-            logger.info("Initializing Phase 3 Production ML Models...")
-            models_engine = ProductionModelsEngine(db)
-            models_engine.train_all_models()
-        except Exception as e:
-            logger.error(f"Error training startup ML models: {e}")
+        order_count = db.query(Order).count()
+        if order_count > 0:
+            try:
+                logger.info(f"Initializing Production ML Models on {order_count} ingested orders...")
+                models_engine = ProductionModelsEngine(db)
+                models_engine.train_all_models()
+            except Exception as e:
+                logger.error(f"Error training startup ML models: {e}")
+        else:
+            logger.info("Database schema ready. Awaiting CSV dataset upload to execute analytics and train ML models.")
     finally:
         db.close()
 

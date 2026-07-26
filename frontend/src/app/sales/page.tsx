@@ -9,12 +9,16 @@ import { CategoryBarChart } from "@/components/charts/CategoryBarChart";
 import { fetchSalesAnalytics } from "@/lib/api-client";
 import { ShoppingBag, Award, Tag } from "lucide-react";
 
+import { InsufficientDataCard } from "@/components/common/insufficient-data-card";
+
 export default function SalesPage() {
   const [sales, setSales] = useState<any>(null);
 
   useEffect(() => {
     fetchSalesAnalytics().then((res) => setSales(res.data)).catch(console.error);
   }, []);
+
+  const hasSalesData = sales && sales.top_products && sales.top_products.length > 0;
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans">
@@ -34,6 +38,15 @@ export default function SalesPage() {
         </div>
 
         <GlobalFilterBar />
+
+        {sales && !hasSalesData && (
+          <InsufficientDataCard
+            title="Product & Category Sales Telemetry Missing"
+            description="Sales intelligence requires order item details, product titles/IDs, categories, and unit price columns."
+            requiredColumns={["product_title / fooditem / item", "category", "quantity", "unit_price / sales_amount"]}
+            suggestedAction="Upload a CSV dataset containing product sales items to view top-performing products and sector distributions."
+          />
+        )}
 
         {/* TOP PRODUCTS TABLE */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
