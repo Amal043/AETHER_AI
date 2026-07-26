@@ -70,8 +70,16 @@ export default function OverviewPage() {
             <div className="text-2xl font-extrabold text-slate-900 font-mono">
               ${kpis ? kpis.financial.total_revenue.toLocaleString() : "..."}
             </div>
-            <div className="text-[11px] text-emerald-600 font-mono mt-1 flex items-center gap-1 font-bold">
-              <TrendingUp className="w-3 h-3" /> +{kpis ? kpis.financial.monthly_growth_pct : "18.4"}% MoM Growth
+            <div className="text-[11px] font-mono mt-1 flex items-center gap-1 font-bold text-slate-600">
+              {kpis && kpis.financial.monthly_growth_pct !== 0 ? (
+                <span className="text-emerald-600 flex items-center gap-1">
+                  <TrendingUp className="w-3 h-3" /> {kpis.financial.monthly_growth_pct > 0 ? "+" : ""}{kpis.financial.monthly_growth_pct}% Period Growth
+                </span>
+              ) : (
+                <span className="text-slate-500 font-semibold">
+                  Source: {kpis?.meta?.data_source || "Uploaded Data"}
+                </span>
+              )}
             </div>
           </div>
 

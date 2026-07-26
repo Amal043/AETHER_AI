@@ -46,6 +46,19 @@ class KPIEngine:
         total_revenue = sum(o.total_amount for o in orders)
         aov = round(total_revenue / total_orders, 2) if total_orders > 0 else 0.0
 
+        # Distinct dates in uploaded orders
+        distinct_dates = self.db.query(func.date(Order.created_at)).filter(Order.is_deleted == False).distinct().count()
+        daily_revenue_avg = round(total_revenue / distinct_dates, 2) if (distinct_dates > 0 and total_revenue > 0) else 0.0
+
+        # Calculate real growth if dataset spans multiple dates
+        monthly_growth_pct = 0.0
+        if distinct_dates > 1:
+            earliest_order = self.db.query(Order).order_by(Order.created_at.asc()).first()
+            latest_order = self.db.query(Order).order_by(Order.created_at.desc()).first()
+            if earliest_order and latest_order and earliest_order.total_amount:
+                raw_diff = latest_order.total_amount - earliest_order.total_amount
+                monthly_growth_pct = round((raw_diff / earliest_order.total_amount) * 100, 2)
+
         # Session Conversion Metrics
         session_q = self.db.query(UserSession)
         if device:
@@ -74,7 +87,7 @@ class KPIEngine:
             if s.actual_delivery and s.created_at:
                 hrs = (s.actual_delivery - s.created_at).total_seconds() / 3600.0
                 delivery_durations.append(hrs)
-        avg_delivery_hours = round(sum(delivery_durations) / len(delivery_durations), 1) if delivery_durations else 48.0
+        avg_delivery_hours = round(sum(delivery_durations) / len(delivery_durations), 1) if delivery_durations else 0.0
         delayed_count = sum(1 for s in delivered_shipments if s.actual_delivery and s.estimated_delivery and s.actual_delivery > s.estimated_delivery)
         cancelled_orders = sum(1 for o in orders if o.status == "Cancelled")
         returned_orders = sum(1 for o in orders if o.status == "Returned")
@@ -91,8 +104,8 @@ class KPIEngine:
                 "total_revenue": round(total_revenue, 2),
                 "total_orders": total_orders,
                 "average_order_value": aov,
-                "monthly_growth_pct": 18.4,
-                "daily_revenue_avg": round(total_revenue / 90, 2) if total_revenue > 0 else 0.0,
+                "monthly_growth_pct": monthly_growth_pct,
+                "daily_revenue_avg": daily_revenue_avg,
             },
             "conversion": {
                 "conversion_rate_pct": conversion_rate,
@@ -112,5 +125,10 @@ class KPIEngine:
                 "cancelled_orders_count": cancelled_orders,
                 "return_rate_pct": return_rate,
                 "warehouse_utilization_pct": warehouse_utilization,
+            },
+            "meta": {
+                "data_grounded": True,
+                "total_days_in_dataset": distinct_dates,
+                "data_source": "Uploaded Dataset" if total_orders > 0 else "Empty Database",
             },
         }
